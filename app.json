@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "itc-service",
+    "slug": "itc-service",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
