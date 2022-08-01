@@ -1,24 +1,40 @@
-export default {
-    colors: {
-        primary: '#5636d3',
-        secondary: '#ff872c',
-        secondary_light: 'rgba(255, 135, 44, 0.3)',
-        success: '#12a454',
-        success_light: 'rgba(18, 164, 84, 0.5)',
-        attention: '#e83f5b',
-        attention_light: 'rgba(232, 63, 91, 0.5)',
-        shape: '#fff',
-        title: '#363f5f',
-        text: '#969cb2',
-        background: '#202024',
-        background_light: '#202033',
-        text_dark: '#000',
-        button: '#BB2121'
-    },
+import { extendTheme } from 'native-base';
 
-    fonts: {
-        regular: 'Poppins_400Regular',
-        medium: 'Poppins_500Medium',
-        bold: 'Poppins_700Bold'
-    }
-}
+export const THEME = extendTheme({
+  colors: {
+    primary: {
+      700: '#BB2121'
+    },
+    secondary: {
+      700: '#e83f5b'
+    },
+    green: {
+      700: '#00875F',
+      500: '#00B37E',
+      300: '#04D361',
+    },
+    gray: {
+      700: '#121214',
+      600: '#202024',
+      500: '#29292E',
+      400: '#323238',
+      300: '#7C7C8A',
+      200: '#C4C4CC',
+      100: '#E1E1E6'
+    },
+    white: '#FFFFFF'
+  },
+  fonts: {
+    heading: 'Poppins_700Bold',
+    body: 'Poppins_400Regular',
+  },
+  fontSizes: {
+    xs: 12,
+    sm: 14,
+    md: 16,
+    lg: 20,
+  },
+  sizes: {
+    14: 56
+  }
+});
