@@ -1,6 +1,8 @@
 import { VStack, HStack, IconButton, useTheme, Text, Heading, FlatList, Center } from 'native-base';
 import {ChatTeardropText, SignOut} from 'phosphor-react-native';
 import { useState } from 'react';
+import {useNavigation} from '@react-navigation/native';
+
 import Logo from '../assets/logo_secondary.svg';
 import { Button } from '../components/Button';
 import { Filter } from '../components/Filter';
@@ -11,9 +13,29 @@ export function Home() {
   const {colors} = useTheme();
   
   const [statusSelected, setStatusSelected] = useState<'open' | 'closed'>('open');
-  const [orders, setOrders] = useState<OrderProps[]>([
-    
-   ]);
+  const [orders, setOrders] = useState<OrderProps[]>([{
+    id: '1',
+    service: 'Troca de tela iPhone 11',
+    when: '18/07/2022 às 10:00',
+    status: 'open',
+  },
+  {
+    id: '2',
+    service: 'Troca de tela iPhone X',
+    when: '01/0/2022 às 15:00',
+    status: 'closed',
+  }
+]);
+
+  const navigation = useNavigation();
+
+  function handleNewOrder() {
+    navigation.navigate('register');
+  }
+
+  function handleOpenDetails( orderId: string) {
+    navigation.navigate('details', { orderId });
+  }
 
   return (
     <VStack flex={1} pb={6} bg="gray.700" >
@@ -43,7 +65,7 @@ export function Home() {
           alignItems="center"  
         >
           <Heading color="gray.100"> Solicitações </Heading>  
-          <Text color="gray.300"> 3 </Text>
+          <Text color="gray.300"> {orders.length} </Text>
         </HStack>   
        
 
@@ -66,7 +88,7 @@ export function Home() {
       <FlatList 
         data={orders}
         keyExtractor={item => item.id}
-        renderItem={ ({item}) => <Order data={item} /> }
+        renderItem={ ({item}) => <Order data={item} onPress={() => handleOpenDetails(item.id)} /> }
         showsVerticalScrollIndicator={false}
         contentContainerStyle={ {paddingBottom: 100} }
         ListEmptyComponent={ () => (
@@ -78,7 +100,7 @@ export function Home() {
         )}
       />
 
-      <Button title='Nova Solicitação'/>
+      <Button title='Nova Solicitação' onPress={handleNewOrder}/>
      </VStack>  
     </VStack>
   );
