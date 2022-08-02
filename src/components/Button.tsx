@@ -15,7 +15,9 @@ export function Button({ title, ...rest }: Props) {
       <Heading 
         color="white"
         fontSize="md"
-      > {title} </Heading>
+      > 
+        {title} 
+      </Heading>
     </NativeBaseButton>
   );
 }

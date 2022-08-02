@@ -6,6 +6,7 @@ import {useFonts ,Poppins_400Regular, Poppins_500Medium, Poppins_700Bold} from '
 
 import {THEME} from './src/style/theme';
 import { Loading } from './src/components/Loading';
+import { Home } from './src/screens/Home';
 
 export default function App() {
 
@@ -15,7 +16,7 @@ export default function App() {
 
   return (
     <NativeBaseProvider theme={THEME}>
-      { fontsLoaded ? <SignIn /> : <Loading/> }
+      { fontsLoaded ? <Home /> : <Loading/> }
     </NativeBaseProvider>
   );
 }
