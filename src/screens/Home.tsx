@@ -1,31 +1,25 @@
 import { VStack, HStack, IconButton, useTheme, Text, Heading, FlatList, Center } from 'native-base';
 import {ChatTeardropText, SignOut} from 'phosphor-react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {useNavigation} from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
+import {Alert} from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 
 import Logo from '../assets/logo_secondary.svg';
 import { Button } from '../components/Button';
 import { Filter } from '../components/Filter';
 import { Order, OrderProps } from '../components/Order';
+import { dateFormat } from '../utils/firestoreDataFormat';
+import { Loading } from '../components/Loading';
 
 
 export function Home() {
   const {colors} = useTheme();
   
+  const [isLoading, setIsLoading] = useState(true);
   const [statusSelected, setStatusSelected] = useState<'open' | 'closed'>('open');
-  const [orders, setOrders] = useState<OrderProps[]>([{
-    id: '1',
-    service: 'Troca de tela iPhone 11',
-    when: '18/07/2022 às 10:00',
-    status: 'open',
-  },
-  {
-    id: '2',
-    service: 'Troca de tela iPhone X',
-    when: '01/0/2022 às 15:00',
-    status: 'closed',
-  }
-]);
+  const [orders, setOrders] = useState<OrderProps[]>([]);
 
   const navigation = useNavigation();
 
@@ -36,6 +30,39 @@ export function Home() {
   function handleOpenDetails( orderId: string) {
     navigation.navigate('details', { orderId });
   }
+
+  function handleSignOut() {
+    auth()
+     .signOut()
+     .catch( (error) => {
+      console.log(error)
+     })
+  }
+
+  useEffect( () => {
+    setIsLoading(true);
+
+    const subscriber = firestore()
+      .collection('order')
+      .where('status', '==', statusSelected)
+      .onSnapshot( snapshot => {
+        const data = snapshot.docs.map(doc => {
+          const {service, description, status, created_at} = doc.data();
+          
+          return {
+            id: doc.id,
+            service,
+            description,
+            status,
+            when: dateFormat(created_at)
+          }
+        });
+        setOrders(data);
+      setIsLoading(false);
+      })
+    return subscriber;
+      
+  }, [statusSelected])
 
   return (
     <VStack flex={1} pb={6} bg="gray.700" >
@@ -52,6 +79,7 @@ export function Home() {
 
       <IconButton 
         icon={ <SignOut size={26} color={colors.gray[300]} />}
+        onPress={handleSignOut}
       />
 
       </HStack>
@@ -85,20 +113,23 @@ export function Home() {
         />
       </HStack>
 
-      <FlatList 
-        data={orders}
-        keyExtractor={item => item.id}
-        renderItem={ ({item}) => <Order data={item} onPress={() => handleOpenDetails(item.id)} /> }
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={ {paddingBottom: 100} }
-        ListEmptyComponent={ () => (
+      {
+        isLoading ? <Loading /> :
+        <FlatList 
+          data={orders}
+          keyExtractor={item => item.id}
+          renderItem={ ({item}) => <Order data={item} onPress={() => handleOpenDetails(item.id)} /> }
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={ {paddingBottom: 100} }
+          ListEmptyComponent={ () => (
             <Center>
                 <ChatTeardropText color={colors.secondary[700]} size={40}/>
                 <Text color="white" fontSize="xl" mt={6} textAlign="center" > 
                 Não possui reparo {statusSelected === 'open' ? 'em aberto' : 'finalizado'} </Text>
             </Center>
-        )}
-      />
+          )}
+        /> 
+      }
 
       <Button title='Nova Solicitação' onPress={handleNewOrder}/>
      </VStack>  
