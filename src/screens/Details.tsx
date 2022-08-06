@@ -3,11 +3,12 @@ import {useRoute} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import { CircleWavyCheck, Hourglass, DesktopTower, Clipboard } from 'phosphor-react-native';
 
-import { VStack, Text  } from 'native-base';
+import { VStack, Text, HStack, useTheme  } from 'native-base';
 import { Header } from '../components/Header';
 import { OrderProps } from '../components/Order';
 import { OrderFirestoreDTO } from '../DTO/OrderFirestoreDTO';
 import { dateFormat } from '../utils/firestoreDataFormat';
+import { Loading } from '../components/Loading';
 
 type RouteParams = {
   orderId: string;
@@ -25,21 +26,35 @@ export function Details() {
   const [isLoading, setIsLoading] = useState(true);
   const [solution, setSolution] = useState('');
 
+  const {colors} = useTheme();
+
 
   const route = useRoute();
   const {orderId} = route.params as RouteParams;
 
-  useEffect(() => {
+  useEffect( () => {
     firestore()
      .collection<OrderFirestoreDTO>('order')
      .doc(orderId)
      .get()
-     .then((doc) => {
+     .then( (doc) => {
       const {service, description, status, created_at, closed_at, solution} = doc.data();
 
       const closed = closed_at ? dateFormat(closed_at) : null;
 
-      setOrder({
+     setOrder({
+        id: doc.id,
+        service,
+        description,
+        status,
+        solution,
+        when: dateFormat(created_at),
+        closed
+      });
+      
+      setIsLoading(false);
+
+      console.log({
         id: doc.id,
         service,
         description,
@@ -51,11 +66,21 @@ export function Details() {
      })
   }, [])
 
+  if(isLoading) {
+    return <Loading />
+  }
+
   return (
     <VStack flex={1} bg="gray.700">
       <Header title='Solicitação' />
 
-      <Text color="white"> { orderId}</Text>
+      <HStack bg="gray.500" justifyContent="center" p={4}>
+        {
+         order.status === 'closed' 
+          ? <CircleWavyCheck size={22} color={colors.white} />
+          : <Hourglass size={22} color={colors.red[500]} />
+        }
+      </HStack>
     </VStack>
   );
 }
