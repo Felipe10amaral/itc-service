@@ -3,12 +3,15 @@ import {useRoute} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import { CircleWavyCheck, Hourglass, DesktopTower, Clipboard } from 'phosphor-react-native';
 
-import { VStack, Text, HStack, useTheme  } from 'native-base';
+import { VStack, Text, HStack, useTheme, ScrollView  } from 'native-base';
 import { Header } from '../components/Header';
 import { OrderProps } from '../components/Order';
 import { OrderFirestoreDTO } from '../DTO/OrderFirestoreDTO';
 import { dateFormat } from '../utils/firestoreDataFormat';
 import { Loading } from '../components/Loading';
+import { CardDetails } from '../components/CardDetails';
+import { Input } from '../components/Input';
+import { Button } from '../components/Button';
 
 type RouteParams = {
   orderId: string;
@@ -80,7 +83,52 @@ export function Details() {
           ? <CircleWavyCheck size={22} color={colors.white} />
           : <Hourglass size={22} color={colors.red[500]} />
         }
+
+        <Text
+          fontSize="sm"
+          color={order.status === 'open' ? colors.primary[700] : colors.white}
+          ml={2}
+        >
+          { order.status === 'closed' ? 'Finalizado' : 'Em andamento'}
+        </Text>
       </HStack>
+
+      <ScrollView
+        mx={5}
+        showsVerticalScrollIndicator={false}
+      >
+        <CardDetails 
+          title='Reparo'
+          description={`Reparo ${order.service}`}
+          icon={DesktopTower}
+          footer={order.when}
+        />
+
+        <CardDetails 
+          title='Descrição do Problema'
+          description={`Reparo ${order.service}`}
+          icon={Clipboard}
+          
+        />
+        <CardDetails 
+          title='Solução'
+          icon={CircleWavyCheck}
+          footer={order.closed && ` Finalizado em ${order.closed}`}
+        >
+          <Input 
+            bg="gray.600" 
+            placeholder='Descreva a Solução' 
+            onChangeText={setSolution}
+            multiline
+            h={24}
+            textAlignVertical="top"
+          />
+        </CardDetails>
+      </ScrollView>
+
+      {
+        order.status === 'open' && <Button title='Encerrar solicitação' m={5} />
+      }
     </VStack>
   );
 }
