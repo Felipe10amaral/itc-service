@@ -3,6 +3,7 @@
     "name": "itc-service",
     "slug": "itc-service",
     "version": "1.0.0",
+    "icon": "./assets/itec.png",
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -11,7 +12,11 @@
     ],
     "android": {
       "package": "com.itcservice",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon-adaptive.png",
+        "backgroundColor": "#fff"
+      }
     },
     "ios": {
       "bundleIdentifier": "com.itcservice",

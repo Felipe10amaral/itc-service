@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
-import { CircleWavyCheck, Hourglass, DesktopTower, Clipboard } from 'phosphor-react-native';
+import { CircleWavyCheck, Hourglass, DesktopTower, ClipboardText, User } from 'phosphor-react-native';
 
 import { VStack, Text, HStack, useTheme, ScrollView, Box  } from 'native-base';
 import { Header } from '../components/Header';
@@ -124,16 +124,17 @@ export function Details() {
         showsVerticalScrollIndicator={false}
       >
         <CardDetails 
-          title='Reparo'
+
+          title={order.description}
           description={`Reparo ${order.service}`}
-          icon={DesktopTower}
+          icon={User}
           footer={order.when}
         />
 
         <CardDetails 
           title='Descrição do Problema'
           description={`Reparo ${order.service}`}
-          icon={Clipboard}
+          icon={ClipboardText}
           
         />
         <CardDetails 

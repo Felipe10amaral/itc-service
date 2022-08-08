@@ -1,9 +1,8 @@
 import { VStack, HStack, IconButton, useTheme, Text, Heading, FlatList, Center } from 'native-base';
-import {ChatTeardropText, SignOut} from 'phosphor-react-native';
+import {ChatTeardropText, SignOut, ListNumbers} from 'phosphor-react-native';
 import { useEffect, useState } from 'react';
 import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
-import {Alert} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 
 import Logo from '../assets/logo_secondary.svg';
@@ -30,6 +29,10 @@ export function Home() {
   function handleOpenDetails( orderId: string) {
     navigation.navigate('details', { orderId });
   }
+
+  function handleOpenListOne() {
+    navigation.navigate('listOne');
+  } 
 
   function handleSignOut() {
     auth()
@@ -76,6 +79,11 @@ export function Home() {
         bg="gray.600"
       >
       <Logo /> 
+
+      <IconButton 
+        icon={ <ListNumbers size={26} color={colors.gray[300]} /> }
+        onPress={handleOpenListOne}
+      />  
 
       <IconButton 
         icon={ <SignOut size={26} color={colors.gray[300]} />}

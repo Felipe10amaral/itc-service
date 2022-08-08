@@ -47,7 +47,7 @@ export function Register() {
 
       <Input 
         mt={4}
-        placeholder="ID do Serviço"
+        placeholder="Nome do Cliente"
         onChangeText={setDescription}
       />
 
