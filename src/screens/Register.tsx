@@ -11,12 +11,12 @@ import { Button } from '../components/Button';
 export function Register() {
   const [isLoading, setIsLoading] = useState(false);
   const [service, setService ] = useState('');
-  const [description, setDescription ] = useState('');
+  const [name, setName ] = useState('');
 
   const navigation = useNavigation();
 
   function handleNewOrderRegister() {
-    if(!service || !description) {
+    if(!service || !name) {
       return Alert.alert("Erro", "Preencha todos os campos");
     }
 
@@ -26,7 +26,7 @@ export function Register() {
       .collection('order')
       .add({
         service,
-        description,
+        name,
         status: 'open',
         created_at: firestore.FieldValue.serverTimestamp()
       })
@@ -48,7 +48,7 @@ export function Register() {
       <Input 
         mt={4}
         placeholder="Nome do Cliente"
-        onChangeText={setDescription}
+        onChangeText={setName}
       />
 
       <Input 
